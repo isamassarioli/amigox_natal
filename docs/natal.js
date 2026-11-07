@@ -12,12 +12,28 @@ function toast(msg) {
   clearTimeout(toastT); toastT = setTimeout(function () { t.classList.remove('mostra'); }, 4200);
 }
 
-/* chamada à API: lança erro com status e chave de erro */
+/* sessão do organizador: o código vai no cabeçalho X-Admin */
+var adminMem = '';
+var ADMIN_KEY = 'natal-admin';
+var admin = {
+  get: function () { try { return localStorage.getItem(ADMIN_KEY) || adminMem; } catch (e) { return adminMem; } },
+  set: function (t) { adminMem = t; try { localStorage.setItem(ADMIN_KEY, t); } catch (e) {} },
+  limpar: function () { adminMem = ''; try { localStorage.removeItem(ADMIN_KEY); } catch (e) {} }
+};
+
+/* chamada à API (função do Supabase): lança erro com status e chave de erro */
 function api(metodo, url, corpo, token) {
-  var h = { 'X-Requested-With': 'natal' };
+  var base = String(window.API_BASE || '').replace(/\/+$/, '');
+  if (!base || base.indexOf('SEU-PROJETO') > -1) {
+    var ec = new Error('sem_config'); ec.status = 0; ec.erro = 'sem_config';
+    ec.mensagem = 'O site ainda não foi ligado ao Supabase. Falta preencher o endereço no arquivo config.js.';
+    return Promise.reject(ec);
+  }
+  var h = {};
   if (corpo !== undefined && corpo !== null) h['Content-Type'] = 'application/json';
   if (token) h['X-Token'] = token;
-  return fetch(url, { method: metodo, headers: h, body: corpo != null ? JSON.stringify(corpo) : undefined, credentials: 'same-origin' })
+  if (url.indexOf('/api/admin/') === 0 && url !== '/api/admin/login') { var a = admin.get(); if (a) h['X-Admin'] = a; }
+  return fetch(base + url.replace(/^\/api/, ''), { method: metodo, headers: h, body: corpo != null ? JSON.stringify(corpo) : undefined })
     .catch(function () { var e = new Error('sem_conexao'); e.status = 0; e.erro = 'sem_conexao'; e.mensagem = 'Sem conexão com o servidor.'; throw e; })
     .then(function (r) {
       return r.json().catch(function () { return null; }).then(function (d) {
@@ -162,5 +178,5 @@ window.addEventListener('resize', function () { clearTimeout(rt); rt = setTimeou
 estrelas(); guirlanda(); bolas(); luzesArvore(); dimensionar();
 if (!reduce && sc) requestAnimationFrame(quadroNeve);
 
-window.Natal = { $: $, esc: esc, toast: toast, api: api, armar: armar, confete: confete, iniciarContagem: iniciarContagem, textoQuando: textoQuando, reduce: reduce };
+window.Natal = { $: $, esc: esc, toast: toast, api: api, admin: admin, armar: armar, confete: confete, iniciarContagem: iniciarContagem, textoQuando: textoQuando, reduce: reduce };
 })();

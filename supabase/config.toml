@@ -1,0 +1,4 @@
+# A função tem login próprio (senha do organizador e código de cada participante),
+# então não exige o JWT do Supabase.
+[functions.amigo]
+verify_jwt = false

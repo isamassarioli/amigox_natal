@@ -8,7 +8,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Mountains+of+Christmas:wght@400;700&family=Nunito:wght@400;600;800&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="/natal.css">
+<link rel="stylesheet" href="natal.css">
 </head>
 <body>
 <div id="estrelas" aria-hidden="true"></div>
@@ -133,7 +133,7 @@
         <h2 id="h-backup">Cópia de segurança</h2>
         <p class="lead">Baixe o JSON com todos os dados da família. Se o servidor perder os dados, você restaura por aqui.</p>
         <div class="linha">
-          <a class="btn" href="/api/admin/backup" id="btn-backup">Baixar backup (.json)</a>
+          <button class="btn" type="button" id="btn-backup">Baixar backup (.json)</button>
           <label class="btn contorno" for="arq-backup" style="display:inline-block">Escolher arquivo de backup</label>
           <input type="file" id="arq-backup" accept=".json,application/json" class="sr">
           <button class="btn contorno" type="button" id="btn-restaurar" disabled>Restaurar backup</button>
@@ -146,7 +146,8 @@
 </div>
 <div id="toast" role="status" aria-live="polite"></div>
 
-<script src="/natal.js"></script>
+<script src="config.js"></script>
+<script src="natal.js"></script>
 <script>
 (function(){
 'use strict';
@@ -188,7 +189,7 @@ function render(){
   $('#s-escolheram').textContent=ps.filter(function(p){return p.escolhido;}).length;
   $('#s-gostos').textContent=ps.filter(function(p){return p.gostos;}).length;
   $('#s-viram').textContent=ps.filter(function(p){return p.viu;}).length;
-  $('#link-publico').value=location.origin+'/';
+  $('#link-publico').value=location.origin+location.pathname.replace(/admin(\.html)?\/?$/,'');
 
   if(!cfgPreenchido||!cfgSujo){
     $('#a-familia').value=estado.familia;$('#a-ano').value=estado.ano;
@@ -240,14 +241,16 @@ function render(){
 $('#form-login').addEventListener('submit',function(e){
   e.preventDefault();
   var b=$('#btn-entrar');b.disabled=true;$('#login-erro').hidden=true;
-  api('POST','/api/admin/login',{senha:$('#senha').value}).then(function(){
+  api('POST','/api/admin/login',{senha:$('#senha').value}).then(function(d){
+    N.admin.set(d.token);
     $('#senha').value='';cfgSujo=false;cfgPreenchido=false;return carregar(false);
   }).catch(function(er){
     var el=$('#login-erro');el.textContent=er.mensagem||'Não consegui entrar.';el.hidden=false;
   }).then(function(){b.disabled=false;});
 });
 $('#btn-sair').addEventListener('click',function(){
-  api('POST','/api/admin/logout').catch(function(){}).then(mostrarLogin);
+  N.admin.limpar();
+  mostrarLogin();
 });
 
 /* ---------- ações ---------- */
@@ -315,6 +318,17 @@ $('#lista-erros').addEventListener('click',function(e){
 });
 $('#btn-limpar-erros').addEventListener('click',function(){
   api('DELETE','/api/admin/erros').then(function(d){aplicar(d,'Avisos resolvidos removidos.');}).catch(falha);
+});
+$('#btn-backup').addEventListener('click',function(){
+  api('GET','/api/admin/backup').then(function(d){
+    var blob=new Blob([JSON.stringify(d,null,2)],{type:'application/json'});
+    var a=document.createElement('a');
+    a.href=URL.createObjectURL(blob);
+    a.download='familia-santos-'+new Date().toISOString().slice(0,10)+'.json';
+    document.body.appendChild(a);a.click();a.remove();
+    setTimeout(function(){URL.revokeObjectURL(a.href);},3000);
+    N.toast('Backup baixado.');
+  }).catch(falha);
 });
 $('#arq-backup').addEventListener('change',function(e){
   var f=e.target.files&&e.target.files[0];textoBackup=null;$('#btn-restaurar').disabled=true;
