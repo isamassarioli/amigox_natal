@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex,nofollow">
+<title>Painel do organizador</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Mountains+of+Christmas:wght@400;700&family=Nunito:wght@400;600;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/natal.css">
+</head>
+<body>
+<div id="estrelas" aria-hidden="true"></div>
+<canvas id="neve" aria-hidden="true"></canvas>
+<canvas id="confete" aria-hidden="true"></canvas>
+
+<div class="pagina">
+  <div class="guirlanda" id="guirlanda" aria-hidden="true"></div>
+  <div class="bolas" id="bolas" aria-hidden="true"></div>
+  <span id="luzes" hidden></span>
+
+  <header class="hero curto">
+    <h1><span class="brilho">Painel do organizador</span></h1>
+    <p class="sub" style="margin-bottom:0">Cadastre os nomes, faça o sorteio e acompanhe quem já abriu o presente.</p>
+  </header>
+
+  <main>
+    <section class="cartao estreito" id="sec-login" aria-labelledby="h-login">
+      <h2 id="h-login">Entrar</h2>
+      <p class="lead">Só quem organiza tem a senha de administrador.</p>
+      <form id="form-login">
+        <label class="campo" for="senha">Senha de administrador
+          <input type="password" id="senha" autocomplete="current-password" required>
+        </label>
+        <div class="linha" style="margin-top:14px">
+          <button class="btn" type="submit" id="btn-entrar">Entrar</button>
+        </div>
+        <p class="aviso" id="login-erro" role="alert" hidden></p>
+      </form>
+    </section>
+
+    <div id="painel" hidden>
+      <div class="linha" style="justify-content:space-between;margin:0 0 16px">
+        <span class="status" style="margin:0" id="admin-aviso-rede"></span>
+        <button class="btn peq contorno" type="button" id="btn-sair">Sair</button>
+      </div>
+
+      <section class="cartao" aria-labelledby="h-resumo">
+        <h2 id="h-resumo">Como está o amigo secreto</h2>
+        <div class="resumo" aria-live="polite">
+          <div class="stat"><b id="s-total">0</b><span>pessoas na lista</span></div>
+          <div class="stat"><b id="s-escolheram">0</b><span>escolheram o nome</span></div>
+          <div class="stat"><b id="s-gostos">0</b><span>escreveram os gostos</span></div>
+          <div class="stat"><b id="s-viram">0</b><span>abriram o presente</span></div>
+        </div>
+        <h3>Link para mandar para a família</h3>
+        <div class="link-box">
+          <label class="sr" for="link-publico">Link do site</label>
+          <input type="text" id="link-publico" readonly>
+          <button class="btn" type="button" id="btn-copiar-link">Copiar link</button>
+        </div>
+        <p class="dica">Todo mundo usa o mesmo link. Cada pessoa escolhe o próprio nome na lista, e o nome fica travado depois.</p>
+      </section>
+
+      <section class="cartao" aria-labelledby="h-erros" id="sec-erros">
+        <h2 id="h-erros">Avisos de erro</h2>
+        <p class="lead">Quando alguém tem problema e toca em "Avisar o organizador", o aviso aparece aqui. Erros do servidor também.</p>
+        <ul class="erros" id="lista-erros"></ul>
+        <button class="btn peq contorno" type="button" id="btn-limpar-erros">Limpar os resolvidos</button>
+      </section>
+
+      <section class="cartao" aria-labelledby="h-ceia">
+        <h2 id="h-ceia">A ceia</h2>
+        <div class="grade">
+          <label class="campo" for="a-familia">Sobrenome da família
+            <input type="text" id="a-familia" autocomplete="off">
+          </label>
+          <label class="campo" for="a-ano">Ano
+            <input type="number" id="a-ano" min="2024" max="2100">
+          </label>
+          <label class="campo" for="a-data">Data e hora da ceia
+            <input type="datetime-local" id="a-data">
+          </label>
+          <label class="campo" for="a-local">Local
+            <input type="text" id="a-local" autocomplete="off" placeholder="Casa de quem?">
+          </label>
+          <label class="campo" for="a-valor">Valor sugerido do presente (R$)
+            <input type="number" id="a-valor" min="0" step="5" inputmode="numeric">
+          </label>
+        </div>
+        <div class="linha" style="margin-top:14px">
+          <button class="btn verde" type="button" id="btn-config">Salvar a ceia</button>
+        </div>
+      </section>
+
+      <section class="cartao" aria-labelledby="h-pessoas">
+        <h2 id="h-pessoas">Quem participa</h2>
+        <p class="lead">Cadastre só o nome. Cada pessoa escreve os próprios gostos no site depois de escolher o nome.</p>
+        <ul class="pessoas" id="lista-pessoas"></ul>
+        <form class="novo" id="form-pessoa" autocomplete="off">
+          <label class="campo" for="n-nome">Novo participante
+            <input type="text" id="n-nome" placeholder="Nome (use sobrenome se houver dois iguais)" maxlength="60" required>
+          </label>
+          <button class="btn verde" type="submit">Adicionar</button>
+        </form>
+
+        <h3>Quem não pode tirar quem</h3>
+        <p class="dica" style="margin:0 0 12px">Use para casais, pais e filhos ou quem já se tirou no ano passado. A regra vale nos dois sentidos.</p>
+        <ul class="regras" id="lista-regras"></ul>
+        <form class="nova-regra" id="form-regra">
+          <label class="campo" for="r-a">Pessoa 1
+            <select id="r-a"></select>
+          </label>
+          <label class="campo" for="r-b">Pessoa 2
+            <select id="r-b"></select>
+          </label>
+          <button class="btn contorno" type="submit">Criar regra</button>
+        </form>
+      </section>
+
+      <section class="cartao" aria-labelledby="h-sorteio">
+        <h2 id="h-sorteio">Sorteio</h2>
+        <p class="lead">O resultado fica guardado no servidor e nem você consegue ver quem tirou quem aqui. Mudar a lista ou as regras depois do sorteio descarta o resultado.</p>
+        <div class="linha">
+          <button class="btn grande" type="button" id="btn-sortear">Sortear agora</button>
+          <button class="btn contorno" type="button" id="btn-descartar" hidden>Descartar sorteio</button>
+        </div>
+        <p class="status" id="status-sorteio"></p>
+      </section>
+
+      <section class="cartao" aria-labelledby="h-backup">
+        <h2 id="h-backup">Cópia de segurança</h2>
+        <p class="lead">Baixe o JSON com todos os dados da família. Se o servidor perder os dados, você restaura por aqui.</p>
+        <div class="linha">
+          <a class="btn" href="/api/admin/backup" id="btn-backup">Baixar backup (.json)</a>
+          <label class="btn contorno" for="arq-backup" style="display:inline-block">Escolher arquivo de backup</label>
+          <input type="file" id="arq-backup" accept=".json,application/json" class="sr">
+          <button class="btn contorno" type="button" id="btn-restaurar" disabled>Restaurar backup</button>
+        </div>
+        <p class="status" id="backup-status"></p>
+        <p class="dica">O arquivo guarda também o resultado do sorteio. Se você participa do amigo secreto, não abra o conteúdo.</p>
+      </section>
+    </div>
+  </main>
+</div>
+<div id="toast" role="status" aria-live="polite"></div>
+
+<script src="/natal.js"></script>
+<script>
+(function(){
+'use strict';
+var N=window.Natal,$=N.$,esc=N.esc,api=N.api;
+var estado=null,cfgSujo=false,cfgPreenchido=false,textoBackup=null,timer=0;
+
+function mostrarLogin(){
+  $('#sec-login').hidden=false;$('#painel').hidden=true;estado=null;clearInterval(timer);timer=0;
+  $('#senha').focus();
+}
+function mostrarPainel(){
+  $('#sec-login').hidden=true;$('#painel').hidden=false;
+  if(!timer)timer=setInterval(function(){if(!document.querySelector('.armado'))carregar(true);},10000);
+}
+function carregar(silencioso){
+  return api('GET','/api/admin/estado').then(function(d){
+    estado=d;mostrarPainel();$('#admin-aviso-rede').textContent='';render();
+  }).catch(function(e){
+    if(e.status===401)mostrarLogin();
+    else if(e.status===0)$('#admin-aviso-rede').textContent='Sem conexão. Os números podem estar desatualizados.';
+    else if(!silencioso)N.toast(e.mensagem);
+  });
+}
+function aplicar(d,msg){
+  estado=d;render();
+  if(d.sorteioDescartado)N.toast('Feito. O sorteio anterior foi descartado, faça outro.');
+  else if(msg)N.toast(msg);
+}
+function falha(e){
+  if(e.status===401){mostrarLogin();N.toast('Sua sessão expirou. Entre de novo.');}
+  else N.toast(e.mensagem||'Algo deu errado.');
+}
+
+/* ---------- desenho ---------- */
+function render(){
+  if(!estado)return;
+  var ps=estado.participantes,total=ps.length;
+  $('#s-total').textContent=total;
+  $('#s-escolheram').textContent=ps.filter(function(p){return p.escolhido;}).length;
+  $('#s-gostos').textContent=ps.filter(function(p){return p.gostos;}).length;
+  $('#s-viram').textContent=ps.filter(function(p){return p.viu;}).length;
+  $('#link-publico').value=location.origin+'/';
+
+  if(!cfgPreenchido||!cfgSujo){
+    $('#a-familia').value=estado.familia;$('#a-ano').value=estado.ano;
+    $('#a-data').value=estado.evento.data||'';$('#a-local').value=estado.evento.local||'';
+    $('#a-valor').value=estado.evento.valorSugerido||0;cfgPreenchido=true;
+  }
+
+  $('#lista-pessoas').innerHTML=total?ps.map(function(p){
+    return '<li class="pessoa"><strong>'+esc(p.nome)+'</strong><div class="tags">'+
+      '<span class="tag'+(p.escolhido?' sim':'')+'">'+(p.escolhido?'escolheu o nome':'não escolheu o nome')+'</span>'+
+      '<span class="tag'+(p.gostos?' sim':'')+'">'+(p.gostos?'gostos escritos':'sem gostos')+'</span>'+
+      (estado.sorteio.realizado?'<span class="tag'+(p.viu?' sim':'')+'">'+(p.viu?'abriu o presente':'não abriu o presente')+'</span>':'')+
+      '</div><div class="acoes">'+
+      (p.escolhido?'<button type="button" class="btn peq contorno" data-liberar="'+esc(p.id)+'" aria-label="Liberar o nome de '+esc(p.nome)+'">Liberar nome</button>':'')+
+      '<button type="button" class="btn peq contorno" data-remover="'+esc(p.id)+'" aria-label="Remover '+esc(p.nome)+'">Remover</button></div></li>';
+  }).join(''):'<li class="pessoa" style="grid-template-columns:1fr;color:#b9c6da">Ninguém cadastrado ainda. Adicione os nomes abaixo.</li>';
+
+  var opts=ps.map(function(p){return '<option value="'+esc(p.id)+'">'+esc(p.nome)+'</option>';}).join('');
+  var a=$('#r-a'),b=$('#r-b'),va=a.value,vb=b.value;
+  a.innerHTML=opts;b.innerHTML=opts;
+  if(va)a.value=va;
+  if(vb)b.value=vb;else if(ps[1])b.value=ps[1].id;
+
+  $('#lista-regras').innerHTML=estado.exclusoes.length?estado.exclusoes.map(function(e,i){
+    return '<li>'+esc(e.nomeA)+' e '+esc(e.nomeB)+' não se tiram<button type="button" data-rm-regra="'+i+'" aria-label="Remover a regra entre '+esc(e.nomeA)+' e '+esc(e.nomeB)+'">&times;</button></li>';
+  }).join(''):'<li style="background:none;border:0;padding:0;color:#b9c6da">Nenhuma regra ainda.</li>';
+
+  var s=estado.sorteio,btn=$('#btn-sortear');
+  btn.classList.remove('armado');btn.removeAttribute('data-original');
+  btn.textContent=s.realizado?'Sortear de novo':'Sortear agora';
+  $('#btn-descartar').hidden=!s.realizado;
+  if(s.realizado){
+    var d=new Date(s.realizadoEm),q=isNaN(d)?'':' em '+d.toLocaleDateString('pt-BR',{day:'numeric',month:'long'})+' às '+d.toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'});
+    $('#status-sorteio').textContent='Sorteio feito'+q+'. '+ps.filter(function(p){return p.viu;}).length+' de '+total+' já abriram o presente.';
+  }else{
+    $('#status-sorteio').textContent='Ainda não sorteado. '+total+' pessoa'+(total===1?'':'s')+' e '+estado.exclusoes.length+' regra'+(estado.exclusoes.length===1?'':'s')+'.';
+  }
+
+  $('#lista-erros').innerHTML=estado.erros.length?estado.erros.map(function(e){
+    var d=new Date(e.em),q=isNaN(d)?'':d.toLocaleDateString('pt-BR',{day:'numeric',month:'short'})+' às '+d.toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'});
+    return '<li class="'+(e.resolvido?'feito':'')+'"><span>'+(e.nome?'<strong>'+esc(e.nome)+'</strong>: ':'')+esc(e.mensagem)+'</span><small>'+q+(e.resolvido?' · resolvido':'')+'</small>'+
+      (e.resolvido?'':'<div><button type="button" class="btn peq contorno" data-resolver="'+esc(e.id)+'">Marcar como resolvido</button></div>')+'</li>';
+  }).join(''):'<li class="feito">Nenhum aviso. Está tudo certo por enquanto.</li>';
+  var abertos=estado.erros.filter(function(e){return !e.resolvido;}).length;
+  $('#h-erros').textContent=abertos?'Avisos de erro ('+abertos+')':'Avisos de erro';
+}
+
+/* ---------- login ---------- */
+$('#form-login').addEventListener('submit',function(e){
+  e.preventDefault();
+  var b=$('#btn-entrar');b.disabled=true;$('#login-erro').hidden=true;
+  api('POST','/api/admin/login',{senha:$('#senha').value}).then(function(){
+    $('#senha').value='';cfgSujo=false;cfgPreenchido=false;return carregar(false);
+  }).catch(function(er){
+    var el=$('#login-erro');el.textContent=er.mensagem||'Não consegui entrar.';el.hidden=false;
+  }).then(function(){b.disabled=false;});
+});
+$('#btn-sair').addEventListener('click',function(){
+  api('POST','/api/admin/logout').catch(function(){}).then(mostrarLogin);
+});
+
+/* ---------- ações ---------- */
+$('#btn-copiar-link').addEventListener('click',function(){
+  var i=$('#link-publico');
+  function manual(){i.focus();i.select();N.toast('Selecionei o link. Copie com o menu do aparelho.');}
+  try{
+    if(navigator.clipboard&&navigator.clipboard.writeText)navigator.clipboard.writeText(i.value).then(function(){N.toast('Link copiado.');},manual);
+    else manual();
+  }catch(e){manual();}
+});
+['#a-familia','#a-ano','#a-data','#a-local','#a-valor'].forEach(function(s){$(s).addEventListener('input',function(){cfgSujo=true;});});
+$('#btn-config').addEventListener('click',function(){
+  api('PUT','/api/admin/config',{
+    familia:$('#a-familia').value,ano:Number($('#a-ano').value),
+    evento:{data:$('#a-data').value,local:$('#a-local').value,valorSugerido:Number($('#a-valor').value)||0}
+  }).then(function(d){cfgSujo=false;aplicar(d,'Dados da ceia salvos.');}).catch(falha);
+});
+$('#form-pessoa').addEventListener('submit',function(e){
+  e.preventDefault();
+  api('POST','/api/admin/participantes',{nome:$('#n-nome').value}).then(function(d){
+    $('#n-nome').value='';aplicar(d,'Participante adicionado.');$('#n-nome').focus();
+  }).catch(falha);
+});
+$('#lista-pessoas').addEventListener('click',function(e){
+  var btn=e.target.closest('button');if(!btn)return;
+  var lib=btn.getAttribute('data-liberar'),rem=btn.getAttribute('data-remover');
+  if(lib){
+    N.armar(btn,'Confirmar: liberar',function(){
+      api('POST','/api/admin/liberar/'+encodeURIComponent(lib)).then(function(d){aplicar(d,'Nome liberado. A pessoa pode escolher de novo.');}).catch(falha);
+    });
+  }else if(rem){
+    N.armar(btn,'Confirmar: remover',function(){
+      api('DELETE','/api/admin/participantes/'+encodeURIComponent(rem)).then(function(d){aplicar(d,'Participante removido.');}).catch(falha);
+    });
+  }
+});
+$('#form-regra').addEventListener('submit',function(e){
+  e.preventDefault();
+  api('POST','/api/admin/regras',{a:$('#r-a').value,b:$('#r-b').value}).then(function(d){aplicar(d,'Regra criada.');}).catch(falha);
+});
+$('#lista-regras').addEventListener('click',function(e){
+  var i=e.target.getAttribute('data-rm-regra');if(i===null)return;
+  api('DELETE','/api/admin/regras/'+encodeURIComponent(i)).then(function(d){aplicar(d,'Regra removida.');}).catch(falha);
+});
+function sortear(){
+  var b=$('#btn-sortear');b.disabled=true;
+  api('POST','/api/admin/sortear').then(function(d){
+    aplicar(d,'Sorteio feito. Mande o link para a família.');
+    var r=b.getBoundingClientRect();N.confete(r.left+r.width/2,r.top,160);
+  }).catch(falha).then(function(){b.disabled=false;});
+}
+$('#btn-sortear').addEventListener('click',function(){
+  if(estado&&estado.sorteio.realizado)N.armar(this,'Confirmar: descartar o atual',sortear);
+  else sortear();
+});
+$('#btn-descartar').addEventListener('click',function(){
+  N.armar(this,'Confirmar: descartar',function(){
+    api('DELETE','/api/admin/sorteio').then(function(d){aplicar(d,'Sorteio descartado.');}).catch(falha);
+  });
+});
+$('#lista-erros').addEventListener('click',function(e){
+  var id=e.target.getAttribute('data-resolver');if(!id)return;
+  api('POST','/api/admin/erros/'+encodeURIComponent(id)+'/resolver').then(function(d){aplicar(d);}).catch(falha);
+});
+$('#btn-limpar-erros').addEventListener('click',function(){
+  api('DELETE','/api/admin/erros').then(function(d){aplicar(d,'Avisos resolvidos removidos.');}).catch(falha);
+});
+$('#arq-backup').addEventListener('change',function(e){
+  var f=e.target.files&&e.target.files[0];textoBackup=null;$('#btn-restaurar').disabled=true;
+  if(!f)return;
+  var r=new FileReader();
+  r.onload=function(){
+    try{var o=JSON.parse(String(r.result));if(!o||!Array.isArray(o.participantes))throw new Error('x');}
+    catch(x){$('#backup-status').textContent='Esse arquivo não parece um backup válido.';return;}
+    textoBackup=String(r.result);$('#btn-restaurar').disabled=false;
+    $('#backup-status').textContent='Arquivo pronto: '+f.name+'. Toque em Restaurar backup para substituir os dados atuais.';
+  };
+  r.onerror=function(){$('#backup-status').textContent='Não consegui ler o arquivo.';};
+  r.readAsText(f);e.target.value='';
+});
+$('#btn-restaurar').addEventListener('click',function(){
+  if(!textoBackup)return;
+  N.armar(this,'Confirmar: substituir tudo',function(){
+    var dados;try{dados=JSON.parse(textoBackup);}catch(x){return;}
+    api('POST','/api/admin/restaurar',dados).then(function(d){
+      textoBackup=null;$('#btn-restaurar').disabled=true;cfgSujo=false;cfgPreenchido=false;
+      $('#backup-status').textContent='Backup restaurado.';aplicar(d,'Backup restaurado.');
+    }).catch(falha);
+  });
+});
+
+carregar(true).then(function(){if(!estado)mostrarLogin();});
+})();
+</script>
+</body>
+</html>

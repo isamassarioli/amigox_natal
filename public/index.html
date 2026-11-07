@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Natal da Família Santos</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Mountains+of+Christmas:wght@400;700&family=Nunito:wght@400;600;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/natal.css">
+</head>
+<body>
+<div id="estrelas" aria-hidden="true"></div>
+<canvas id="neve" aria-hidden="true"></canvas>
+<canvas id="confete" aria-hidden="true"></canvas>
+
+<div class="pagina">
+  <div class="guirlanda" id="guirlanda" aria-hidden="true"></div>
+  <div class="bolas" id="bolas" aria-hidden="true"></div>
+
+  <div class="treno" aria-hidden="true">
+    <svg viewBox="-60 0 380 100">
+      <defs>
+        <g id="rena">
+          <ellipse cx="0" cy="0" rx="17" ry="8"/>
+          <path d="M10 -4 L20 -15" stroke="currentColor" stroke-width="6" stroke-linecap="round" fill="none"/>
+          <ellipse cx="25" cy="-17" rx="8" ry="5" transform="rotate(-20 25 -17)"/>
+          <path d="M-12 5 L-18 20 M-6 7 L-8 21 M8 7 L11 21 M13 5 L19 19" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" fill="none"/>
+          <path d="M26 -21 L24 -32 M24 -32 L18 -37 M24 -32 L30 -38 M27 -22 L33 -31 M33 -31 L39 -33" stroke="currentColor" stroke-width="2" stroke-linecap="round" fill="none"/>
+          <path d="M-16 -3 Q-22 -5 -24 -12" stroke="currentColor" stroke-width="3" fill="none" stroke-linecap="round"/>
+        </g>
+      </defs>
+      <g fill="currentColor" color="#ffe7b3">
+        <circle class="fagulha" cx="-12" cy="50" r="2.4"/>
+        <circle class="fagulha" cx="-28" cy="62" r="2" style="animation-delay:.4s"/>
+        <circle class="fagulha" cx="-44" cy="48" r="2.6" style="animation-delay:.8s"/>
+        <circle class="fagulha" cx="-56" cy="66" r="1.8" style="animation-delay:.2s"/>
+        <path d="M12 38 H92 L84 62 Q56 68 24 62 Z"/>
+        <path d="M92 38 Q104 36 102 22" stroke="currentColor" stroke-width="4" fill="none" stroke-linecap="round"/>
+        <path d="M6 72 Q56 80 100 68 Q110 65 106 54" stroke="currentColor" stroke-width="3" fill="none" stroke-linecap="round"/>
+        <path d="M30 62 V73 M70 62 V71" stroke="currentColor" stroke-width="3"/>
+        <circle cx="32" cy="30" r="15" opacity=".9"/>
+        <rect x="26" y="14" width="12" height="8" rx="3" opacity=".9"/>
+        <path d="M100 48 Q150 44 190 58 L262 56" stroke="currentColor" stroke-width="1.4" fill="none"/>
+        <use href="#rena" x="190" y="60"/>
+        <use href="#rena" x="262" y="56"/>
+        <circle class="nariz" cx="294" cy="41" r="3.6"/>
+      </g>
+    </svg>
+  </div>
+
+  <header class="hero">
+    <div>
+      <h1>Natal da <span class="brilho">Família <span id="titulo-fam">Santos</span></span></h1>
+      <p class="sub">Escolha o seu nome, conte do que você gosta e descubra quem você tirou no amigo secreto.</p>
+      <p class="quando" id="quando">Carregando a data da ceia</p>
+      <div class="conta" role="timer" aria-label="Contagem regressiva para a ceia">
+        <div><b id="c-d">0</b><span>dias</span></div>
+        <div><b id="c-h">0</b><span>horas</span></div>
+        <div><b id="c-m">0</b><span>min</span></div>
+        <div><b id="c-s">0</b><span>seg</span></div>
+      </div>
+      <p class="conta-msg" id="conta-msg">Faltam para a ceia de Natal.</p>
+    </div>
+    <div class="arvore" aria-hidden="true">
+      <svg viewBox="0 0 240 300">
+        <ellipse cx="120" cy="292" rx="112" ry="9" fill="#e8f0fa" opacity=".92"/>
+        <rect x="106" y="238" width="28" height="40" rx="3" fill="#6b3f1f"/>
+        <polygon points="120,125 38,242 202,242" fill="#14683f"/>
+        <polygon points="120,80 54,178 186,178" fill="#1b8a54"/>
+        <polygon points="120,40 70,122 170,122" fill="#25a566"/>
+        <path d="M82 114 Q120 134 158 114 M64 168 Q120 192 176 168 M52 232 Q120 258 188 232" fill="none" stroke="#ffe9a8" stroke-width="2.4" stroke-dasharray="1 7" stroke-linecap="round"/>
+        <g id="luzes"></g>
+        <polygon class="topo" fill="#ffc94a" points="120,10 126,26 143,26 129,36 134,52 120,42 106,52 111,36 97,26 114,26"/>
+        <rect x="48" y="262" width="34" height="28" rx="2" fill="#c4212f"/>
+        <rect x="62" y="262" width="6" height="28" fill="#ffd86b"/>
+        <rect x="158" y="268" width="30" height="22" rx="2" fill="#ffc94a"/>
+        <rect x="170" y="268" width="6" height="22" fill="#c4212f"/>
+        <rect x="88" y="276" width="28" height="14" rx="2" fill="#5cc8ff"/>
+        <rect x="99" y="276" width="6" height="14" fill="#fff"/>
+      </svg>
+    </div>
+  </header>
+
+  <main>
+    <div class="aviso" id="aviso" role="alert" hidden>
+      <p id="aviso-texto"></p>
+      <button class="btn peq contorno" type="button" id="btn-avisar">Avisar o organizador</button>
+    </div>
+
+    <section class="cartao" id="sec-escolher" aria-labelledby="h-escolher" hidden>
+      <h2 id="h-escolher">Quem é você?</h2>
+      <p class="lead" id="escolher-lead">Escolha o seu nome na lista. Cada nome só pode ser escolhido uma vez, então confira antes de confirmar.</p>
+      <div class="estreito" style="margin:0">
+        <label class="campo" for="sel-nome">Seu nome
+          <select id="sel-nome"></select>
+        </label>
+        <div class="linha" style="margin-top:14px">
+          <button class="btn grande" type="button" id="btn-escolher">Esse sou eu</button>
+        </div>
+      </div>
+      <p class="dica" id="escolher-dica"></p>
+    </section>
+
+    <section class="cartao" id="sec-gostos" aria-labelledby="h-gostos" hidden>
+      <h2 id="h-gostos">Olá, <span id="eu-nome"></span></h2>
+      <p class="lead">Conte do que você gosta. A pessoa que tirou você vai ler este texto para escolher o presente.</p>
+      <label class="campo" for="gostos">Seus gostos e ideias de presente
+        <textarea id="gostos" maxlength="600" placeholder="Ex.: gosto de livros de suspense, café, meias divertidas, plantas. Tamanho M, cor favorita verde."></textarea>
+      </label>
+      <div class="linha" style="margin-top:14px">
+        <button class="btn verde" type="button" id="btn-gostos">Salvar meus gostos</button>
+        <span class="ok-msg" id="gostos-ok" role="status" hidden>Salvo!</span>
+      </div>
+      <p class="dica">Você pode voltar e mudar o texto quando quiser neste mesmo aparelho.</p>
+    </section>
+
+    <section class="cartao" id="sec-amigo" aria-labelledby="h-amigo" hidden>
+      <h2 id="h-amigo">Seu amigo secreto</h2>
+      <div id="amigo-espera" hidden>
+        <p class="lead">O sorteio ainda não foi feito. Quando o organizador sortear, o seu presente aparece aqui.</p>
+        <button class="btn contorno" type="button" id="btn-atualizar">Ver se o sorteio já saiu</button>
+      </div>
+      <div id="amigo-presente" hidden>
+        <p class="lead centro" id="amigo-lead" style="margin-left:auto;margin-right:auto">O sorteio saiu. Toque no presente para descobrir quem você tirou.</p>
+        <div class="palco" id="palco">
+          <div class="raios"></div>
+          <div class="gift">
+            <div class="gift-corpo"></div>
+            <div class="gift-fita"></div>
+            <div class="gift-tampa"><span class="laco e"></span><span class="laco d"></span><span class="no"></span></div>
+          </div>
+        </div>
+        <div class="centro" id="amigo-acoes">
+          <button class="btn grande" type="button" id="btn-abrir">Abrir meu presente</button>
+        </div>
+        <div class="revela" id="revela" hidden>
+          <p class="rotulo">Você tirou</p>
+          <p class="quem" id="r-quem"></p>
+          <p class="detalhe" id="r-gostos"></p>
+          <p class="detalhe" id="r-valor"></p>
+          <div class="linha" style="justify-content:center;margin-top:16px">
+            <button class="btn peq contorno" type="button" id="btn-atualizar2">Atualizar os gostos dessa pessoa</button>
+          </div>
+          <p class="dica" style="margin-left:auto;margin-right:auto">Só este aparelho consegue ver o resultado de novo. Não conte para ninguém.</p>
+        </div>
+      </div>
+    </section>
+  </main>
+</div>
+<div id="toast" role="status" aria-live="polite"></div>
+
+<script src="/natal.js"></script>
+<script>
+(function(){
+'use strict';
+var N=window.Natal,$=N.$,esc=N.esc,api=N.api;
+var TOKEN_KEY='natal-amigo-token';
+var pub=null,eu=null,tokenMem=null,gostosSujo=false,ultimoErro='';
+
+function lerToken(){try{return localStorage.getItem(TOKEN_KEY)||tokenMem;}catch(e){return tokenMem;}}
+function gravarToken(t){tokenMem=t;try{localStorage.setItem(TOKEN_KEY,t);}catch(e){}}
+function apagarToken(){tokenMem=null;try{localStorage.removeItem(TOKEN_KEY);}catch(e){}}
+
+function mostrarAviso(texto,detalhe){
+  ultimoErro=texto+(detalhe?' ('+detalhe+')':'');
+  $('#aviso-texto').textContent=texto+' Se continuar assim, avise o organizador.';
+  $('#aviso').hidden=false;
+}
+function limparAviso(){$('#aviso').hidden=true;}
+$('#btn-avisar').addEventListener('click',function(){
+  var b=this;b.disabled=true;
+  api('POST','/api/erro',{mensagem:ultimoErro||'Algo deu errado na página.'},lerToken()).then(function(){
+    N.toast('Aviso enviado. O organizador vai ver no painel.');
+  }).catch(function(e){
+    N.toast(e.status===429?e.mensagem:'Não consegui enviar o aviso. Mande uma mensagem para o organizador.');
+  }).then(function(){b.disabled=false;});
+});
+
+/* ---------- carregar dados ---------- */
+function carregarPublico(){
+  return api('GET','/api/publico').then(function(d){pub=d;}).catch(function(e){
+    mostrarAviso('Não consegui carregar a lista de nomes.',e.mensagem);
+  });
+}
+function carregarEu(){
+  var t=lerToken();
+  if(!t){eu=null;return Promise.resolve();}
+  return api('GET','/api/eu',null,t).then(function(d){eu=d;}).catch(function(e){
+    if(e.status===401){apagarToken();eu=null;mostrarAviso('O organizador liberou o seu nome. Escolha o seu nome de novo.','token invalido');}
+    else if(e.status===0){/* sem rede: mantém o que já está na tela */}
+    else mostrarAviso('Algo deu errado ao carregar os seus dados.',e.mensagem);
+  });
+}
+
+/* ---------- desenho da tela ---------- */
+function renderHero(){
+  if(!pub)return;
+  $('#titulo-fam').textContent=pub.familia;
+  document.title='Natal da Família '+pub.familia;
+  $('#quando').textContent=N.textoQuando(pub.evento);
+}
+function renderEscolher(){
+  var sec=$('#sec-escolher');
+  sec.hidden=!!eu;
+  if(eu||!pub)return;
+  var sel=$('#sel-nome'),atual=sel.value,livres=0;
+  var opts='<option value="" disabled selected>Escolha o seu nome</option>';
+  pub.participantes.forEach(function(p){
+    if(!p.escolhido)livres++;
+    opts+='<option value="'+esc(p.id)+'"'+(p.escolhido?' disabled':'')+'>'+esc(p.nome)+(p.escolhido?' (já escolhido)':'')+'</option>';
+  });
+  sel.innerHTML=opts;
+  if(atual){var o=sel.querySelector('option[value="'+atual+'"]');if(o&&!o.disabled)sel.value=atual;}
+  var lead=$('#escolher-lead'),dica=$('#escolher-dica'),btn=$('#btn-escolher');
+  if(!pub.participantes.length){
+    lead.textContent='O organizador ainda não cadastrou os nomes. Volte daqui a pouco.';
+    sel.disabled=true;btn.disabled=true;dica.textContent='';
+  }else{
+    lead.textContent='Escolha o seu nome na lista. Cada nome só pode ser escolhido uma vez, então confira antes de confirmar.';
+    sel.disabled=livres===0;btn.disabled=livres===0;
+    dica.textContent=livres===0?'Todos os nomes já foram escolhidos. Se você ainda não escolheu o seu, fale com o organizador.':'Nomes marcados como já escolhidos não podem ser escolhidos de novo.';
+  }
+}
+function renderGostos(){
+  $('#sec-gostos').hidden=!eu;
+  if(!eu)return;
+  $('#eu-nome').textContent=eu.nome;
+  var t=$('#gostos');
+  if(!gostosSujo&&document.activeElement!==t)t.value=eu.gostos||'';
+}
+function renderAmigo(){
+  $('#sec-amigo').hidden=!eu;
+  if(!eu)return;
+  $('#amigo-espera').hidden=eu.sorteado;
+  $('#amigo-presente').hidden=!eu.sorteado;
+  if(!eu.sorteado)return;
+  var aberto=eu.viu;
+  $('#palco').classList.toggle('aberto',aberto);
+  $('#amigo-acoes').hidden=aberto;
+  $('#amigo-lead').hidden=aberto;
+  $('#revela').hidden=!aberto;
+  if(aberto){
+    if(eu.amigo){
+      $('#r-quem').textContent=eu.amigo.nome;
+      var g=$('#r-gostos');
+      if(eu.amigo.gostos){g.textContent='Gostos: '+eu.amigo.gostos;g.classList.remove('fraco');}
+      else{g.textContent='Essa pessoa ainda não escreveu os gostos. Volte mais tarde e toque em atualizar.';g.classList.add('fraco');}
+      var v=Number(eu.evento.valorSugerido)||0;
+      $('#r-valor').textContent=v>0?'Valor sugerido do presente: R$ '+v.toLocaleString('pt-BR'):'';
+    }else{
+      $('#r-quem').textContent='Não achei seu par';
+      $('#r-gostos').textContent='O organizador já foi avisado. Tente de novo mais tarde.';
+      $('#r-gostos').classList.add('fraco');$('#r-valor').textContent='';
+    }
+  }
+}
+function render(){renderHero();renderEscolher();renderGostos();renderAmigo();}
+
+/* ---------- ações ---------- */
+$('#sel-nome').addEventListener('change',function(){
+  var b=$('#btn-escolher');b.classList.remove('armado');b.textContent='Esse sou eu';clearTimeout(b._t);
+});
+$('#btn-escolher').addEventListener('click',function(){
+  var sel=$('#sel-nome'),id=sel.value;
+  if(!id){N.toast('Escolha o seu nome na lista primeiro.');return;}
+  var nome=sel.options[sel.selectedIndex].text;
+  var btn=this;
+  N.armar(btn,'Confirmar: eu sou '+nome,function(){
+    btn.disabled=true;
+    api('POST','/api/escolher',{id:id}).then(function(d){
+      gravarToken(d.token);eu=d.eu;limparAviso();gostosSujo=false;render();
+      N.toast('Nome confirmado. Agora conte os seus gostos.');
+      window.scrollTo({top:$('#sec-gostos').offsetTop-20,behavior:N.reduce?'auto':'smooth'});
+    }).catch(function(e){
+      if(e.erro==='nome_ocupado'){
+        mostrarAviso('Esse nome já foi escolhido por outra pessoa. Escolha outro nome na lista.','nome ocupado');
+      }else if(e.status===0){
+        mostrarAviso('Sem conexão com o servidor. Tente de novo.','sem conexão');
+      }else{
+        mostrarAviso('Não consegui confirmar o seu nome. '+e.mensagem,e.mensagem);
+      }
+      return carregarPublico();
+    }).then(function(){btn.disabled=false;render();});
+  });
+});
+$('#gostos').addEventListener('input',function(){gostosSujo=true;$('#gostos-ok').hidden=true;});
+$('#btn-gostos').addEventListener('click',function(){
+  var b=this;b.disabled=true;
+  api('PUT','/api/gostos',{gostos:$('#gostos').value},lerToken()).then(function(d){
+    eu=d;gostosSujo=false;limparAviso();$('#gostos-ok').hidden=false;render();
+  }).catch(function(e){
+    if(e.status===401){apagarToken();eu=null;render();mostrarAviso('O organizador liberou o seu nome. Escolha o seu nome de novo.','token invalido');}
+    else mostrarAviso('Não consegui salvar os seus gostos. '+e.mensagem,e.mensagem);
+  }).then(function(){b.disabled=false;});
+});
+function atualizar(manual){
+  return Promise.all([carregarPublico(),carregarEu()]).then(function(){
+    render();
+    if(manual&&eu)N.toast(eu.sorteado?'Atualizado.':'O sorteio ainda não foi feito.');
+  });
+}
+$('#btn-atualizar').addEventListener('click',function(){atualizar(true);});
+$('#btn-atualizar2').addEventListener('click',function(){atualizar(true);});
+$('#btn-abrir').addEventListener('click',function(){
+  var b=this;b.disabled=true;
+  api('POST','/api/revelar',null,lerToken()).then(function(d){
+    eu=d;limparAviso();render();
+    var r=$('#palco').getBoundingClientRect();
+    N.confete(r.left+r.width/2,r.top+r.height/2,170);
+  }).catch(function(e){
+    if(e.erro==='par_nao_encontrado')mostrarAviso('Não achei o seu amigo secreto. O organizador já foi avisado.','par não encontrado');
+    else if(e.erro==='sem_sorteio'){eu.sorteado=false;render();N.toast('O sorteio ainda não foi feito.');}
+    else if(e.status===401){apagarToken();eu=null;render();mostrarAviso('O organizador liberou o seu nome. Escolha o seu nome de novo.','token invalido');}
+    else mostrarAviso('Não consegui abrir o presente. '+e.mensagem,e.mensagem);
+  }).then(function(){b.disabled=false;});
+});
+
+/* ---------- início ---------- */
+var tick=N.iniciarContagem(function(){return pub?pub.evento:{};},function(){return pub?pub.familia:'';});
+Promise.all([carregarPublico(),carregarEu()]).then(function(){render();tick();});
+setInterval(function(){
+  if(document.hidden)return;
+  atualizar(false).then(function(){if(pub)tick();});
+},30000);
+})();
+</script>
+</body>
+</html>
