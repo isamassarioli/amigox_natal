@@ -10,6 +10,8 @@ const sql: any = postgres(Deno.env.get('SUPABASE_DB_URL') || '', {
   connect_timeout: 10,
 });
 const ADMIN_PASSWORD = Deno.env.get('ADMIN_PASSWORD') || '';
+// E-mails (ou nomes de usuário) que podem entrar no painel, separados por vírgula. Vazio = só a senha é exigida.
+const ADMIN_EMAILS = (Deno.env.get('ADMIN_EMAIL') || '').split(',').map((x) => x.trim().toLowerCase()).filter((x) => x);
 const ORIGEM = Deno.env.get('ALLOWED_ORIGIN') || '*';
 const CORS: Record<string, string> = {
   'Access-Control-Allow-Origin': ORIGEM,
@@ -199,6 +201,11 @@ async function senhaCerta(s: string): Promise<boolean> {
   if (!ADMIN_PASSWORD) return false;
   return iguais(await sha(String(s)), await sha(ADMIN_PASSWORD));
 }
+async function loginCerto(email: any, senha: string): Promise<boolean> {
+  const senhaOk = await senhaCerta(senha);
+  const emailOk = ADMIN_EMAILS.length === 0 || ADMIN_EMAILS.includes(String(email || '').trim().toLowerCase());
+  return senhaOk && emailOk;
+}
 const NEGADO = () => err(401, 'sem_login', 'Entre com a senha de administrador.');
 // Rota de administrador que altera dados
 async function adminMutar(req: Request, fn: (db: any) => Promise<R> | R): Promise<R> {
@@ -271,7 +278,7 @@ async function tratar(req: Request, rota: string): Promise<R> {
     if (!ADMIN_PASSWORD) return err(500, 'sem_senha', 'A senha do organizador ainda não foi configurada no Supabase (ADMIN_PASSWORD).');
     if (!limitar('log:' + ipDe(req), 8, 600000)) return err(429, 'muitas', 'Muitas tentativas. Espere 10 minutos.');
     const b = await lerCorpo(req);
-    if (typeof b.senha !== 'string' || !(await senhaCerta(b.senha))) return err(401, 'senha', 'Senha incorreta.');
+    if (typeof b.senha !== 'string' || !(await loginCerto(b.email, b.senha))) return err(401, 'senha', 'E-mail ou senha incorretos.');
     return ok({ ok: true, token: await criarSessao(await lerDb()) });
   }
   if (m === 'POST' && rota === '/admin/logout') return ok({ ok: true });

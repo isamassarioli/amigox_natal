@@ -50,6 +50,12 @@ npx supabase secrets set ADMIN_PASSWORD="escolha-uma-senha-forte"
 ```
 Sem essa senha ninguém entra no painel. Use uma senha longa, porque o limite de tentativas é por instância da função.
 
+Para o painel pedir também o **e-mail**, defina o `ADMIN_EMAIL`. Pode ser mais de um, separados por vírgula, e as letras maiúsculas não importam:
+```bash
+npx supabase secrets set ADMIN_EMAIL="voce@exemplo.com,outra-pessoa@exemplo.com"
+```
+Sem o `ADMIN_EMAIL`, só a senha é exigida.
+
 ### 4. Publicar a função
 ```bash
 npx supabase functions deploy amigo --no-verify-jwt

@@ -28,8 +28,11 @@
   <main>
     <section class="cartao estreito" id="sec-login" aria-labelledby="h-login">
       <h2 id="h-login">Entrar</h2>
-      <p class="lead">Só quem organiza tem a senha de administrador.</p>
+      <p class="lead">Só quem organiza tem o acesso de administrador.</p>
       <form id="form-login">
+        <label class="campo" for="email" style="margin-bottom:12px">E-mail
+          <input type="email" id="email" autocomplete="username" placeholder="voce@exemplo.com">
+        </label>
         <label class="campo" for="senha">Senha de administrador
           <input type="password" id="senha" autocomplete="current-password" required>
         </label>
@@ -241,7 +244,7 @@ function render(){
 $('#form-login').addEventListener('submit',function(e){
   e.preventDefault();
   var b=$('#btn-entrar');b.disabled=true;$('#login-erro').hidden=true;
-  api('POST','/api/admin/login',{senha:$('#senha').value}).then(function(d){
+  api('POST','/api/admin/login',{email:$('#email').value,senha:$('#senha').value}).then(function(d){
     N.admin.set(d.token);
     $('#senha').value='';cfgSujo=false;cfgPreenchido=false;return carregar(false);
   }).catch(function(er){
